@@ -46,25 +46,6 @@ class AutoCnfiguration(unittest.TestCase):
         select_region.select_by_visible_text('US East (N. Virginia)')
         browser.find_element(By.XPATH, '//*[@id="j_idt14:designParameters"]/table/tbody/tr[4]/td[2]/input').send_keys(os.environ.get('AWS_ACCESS_KEY_ID'))
         browser.find_element(By.XPATH, '//*[@id="j_idt14:designParameters"]/table/tbody/tr[5]/td[2]/input').send_keys(os.environ.get('AWS_SECRET_ACCESS_KEY'))
-
-        # Connect to deploy repository
-        browser.implicitly_wait(10)
-        browser.find_element(By.XPATH, '//*[@id="j_idt14:j_idt827"]').click()
-        WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="modalAddRepoConnection_shade"]')))
-        browser.implicitly_wait(10)
-        WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="modalAddRepoConnectionForm:productionRepositoryName"]')))
-        deployment_type_list = browser.find_element(By.ID, 'modalAddRepoConnectionForm:j_idt838s')
-        select_deployment_type = Select(deployment_type_list)
-        select_deployment_type.select_by_visible_text('AWS S3')
-        browser.implicitly_wait(10)
-        browser.find_element(By.NAME, 'modalAddRepoConnectionForm:j_idt896').click()
-        browser.find_element(By.NAME, 'modalAddRepoConnectionForm:j_idt896').send_keys(os.environ.get('BUCKET_NAME'))
-        deployment_region_list = browser.find_element(By.XPATH, '//*[@id="modalAddRepoConnectionForm:productionParameters"]/table/tbody/tr[3]/td[2]/select')
-        select_deployment_region = Select(deployment_region_list)
-        select_deployment_region.select_by_visible_text('US East (N. Virginia)')
-        browser.find_element(By.XPATH, '//*[@id="modalAddRepoConnectionForm:productionParameters"]/table/tbody/tr[4]/td[2]/input').send_keys(os.environ.get('AWS_ACCESS_KEY_ID'))
-        browser.find_element(By.XPATH, '//*[@id="modalAddRepoConnectionForm:productionParameters"]/table/tbody/tr[5]/td[2]/input').send_keys(os.environ.get('AWS_SECRET_ACCESS_KEY'))
-        browser.find_element(By.XPATH, '//*[@id="modalAddRepoConnectionForm:j_idt1096"]').click()
         browser.find_element(By.XPATH, '//*[@id="j_idt14:repositoryProps"]/div[3]/input[2]').click()
 
         # Configure User mode
@@ -82,8 +63,26 @@ class AutoCnfiguration(unittest.TestCase):
         browser.find_element(By.XPATH, '//*[@id="loginPassword"]').send_keys(os.environ.get('PASSWORD'))
         browser.find_element(By.XPATH, '//*[@id="loginSubmit"]').click()
 
-        
-        
+        # configure deployment repository
+        WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ll"]/a[3]'))).click()
+        repository_button = browser.find_element(By.XPATH, '/html/body/div[2]/div/div/div/div/div[2]/ul/li[2]/a')
+        browser.execute_script("arguments[0].click();", repository_button)
+        #WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.NAME, 'systemSettingsForm:j_idt106'))).click()
+        deployment_button = browser.find_element(By.ID, 'systemSettingsForm:j_idt106')
+        browser.execute_script("arguments[0].click();", deployment_button)
+        deployment_type_list = browser.find_element(By.ID, 'systemSettingsForm:j_idt656:0:j_idt661')
+        select_deployment_type = Select(deployment_type_list)
+        select_deployment_type.select_by_visible_text('AWS S3')
+        browser.implicitly_wait(10)
+        browser.find_element(By.NAME, 'systemSettingsForm:j_idt656:0:j_idt719').click()
+        browser.find_element(By.NAME, 'systemSettingsForm:j_idt656:0:j_idt719').send_keys(os.environ.get('BUCKET_NAME'))
+        deployment_region_list = browser.find_element(By.XPATH, '//*[@id="systemSettingsForm:j_idt656:0:productionParameters"]/table/tbody/tr[3]/td[2]/select')
+        select_deployment_region = Select(deployment_region_list)
+        select_deployment_region.select_by_visible_text('US East (N. Virginia)')
+        browser.find_element(By.XPATH, '//*[@id="systemSettingsForm:j_idt656:0:productionParameters"]/table/tbody/tr[4]/td[2]/input').send_keys(os.environ.get('AWS_ACCESS_KEY_ID'))
+        browser.find_element(By.XPATH, '//*[@id="systemSettingsForm:j_idt656:0:productionParameters"]/table/tbody/tr[5]/td[2]/input').send_keys(os.environ.get('AWS_SECRET_ACCESS_KEY'))
+        browser.find_element(By.XPATH, '//*[@id="systemSettingsForm:j_idt922"]').click()
+
         browser.quit()
 
 if __name__ == '__main__':
